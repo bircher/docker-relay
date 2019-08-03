@@ -1,0 +1,12 @@
+# Use minimal environment, everything is in docker containers.
+language: minimal
+
+services:
+  - docker
+  
+before_install:
+  - docker pull golang:1.12
+  - docker pull php:7.2-fpm
+
+script:
+  - docker run -it --rm -v "$PWD":/usr/src/dr -w /usr/src/dr golang:1.12 go version
