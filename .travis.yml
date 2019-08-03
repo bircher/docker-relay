@@ -7,8 +7,10 @@ services:
 before_install:
   - docker pull golang:1.12
   - docker pull php:7.2-fpm
-  - cd test && docker-compose up -d
 
 script:
   - docker run -it --rm -v "$PWD":/usr/src/dr -w /usr/src/dr golang:1.12 go version
-  - cd test && docker-compose exec php ./check
+  - cd test 
+  - docker-compose up -d
+  - docker-compose exec php ./check
+  - docker-compose exec -e TEST_FAIL=exception php ./check; if [ $? -ne 255 ]; then exit 1; fi
