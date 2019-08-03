@@ -1,6 +1,5 @@
 # Use minimal environment, everything is in docker containers.
 language: minimal
-sudo: 'required'
 
 services:
   - docker
@@ -11,8 +10,6 @@ addons:
       - docker-ce
 
 before_install:
-  - sudo apt update -y
-  - sudo apt install --only-upgrade docker-ce -y
   - docker version
   - docker-compose version
   - docker pull golang:1.12
@@ -23,4 +20,4 @@ script:
   - cd test 
   - docker-compose up -d
   - docker-compose exec php ./check
-  - docker-compose exec -e TEST_FAIL=exception php ./check; if [ $? -ne 255 ]; then exit 1; fi
+  - docker exec -e TEST_FAIL=exception $(docker-compose ps -q php) ./check; if [ $? -ne 255 ]; then false; fi
