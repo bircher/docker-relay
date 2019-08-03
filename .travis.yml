@@ -1,10 +1,20 @@
 # Use minimal environment, everything is in docker containers.
 language: minimal
+sudo: 'required'
 
 services:
   - docker
-  
+
+addons:
+  apt:
+    packages:
+      - docker-ce
+
 before_install:
+  - sudo apt update -y
+  - sudo apt install --only-upgrade docker-ce -y
+  - docker version
+  - docker-compose version
   - docker pull golang:1.12
   - docker pull php:7.2-fpm
 
