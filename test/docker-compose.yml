@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+
+  php:
+    image: php:7.2-fpm
+    environment:
+      ENV_CHECK: ${ENV_VAR_CHECK}
+    working_dir: /usr/src/myapp
+    volumes:
+      - ./:/usr/src/myapp

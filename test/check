@@ -1,0 +1,8 @@
+#!/usr/bin/env php
+<?php
+
+echo phpversion() . " - " . getenv("ENV_CHECK") . "\n";
+
+if (getenv("TEST_FAIL") == "exception") {
+    throw new Exception("test non 0 exit codes");
+}
