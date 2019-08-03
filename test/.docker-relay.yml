@@ -1,0 +1,4 @@
+php:
+  cmd: php
+  env:
+    - TEST_FAIL=${PHP_EXIT}

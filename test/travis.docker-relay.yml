@@ -1,0 +1,9 @@
+
+go:
+  container: "!"
+  cmd: go
+  workdir: "/usr/src/dr"
+  run:
+    image: "golang:1.12"
+    volume:
+      - "${PWD}:/usr/src/dr"

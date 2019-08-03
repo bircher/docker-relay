@@ -1,5 +1,6 @@
 # Use minimal environment, everything is in docker containers.
 language: minimal
+sudo: required
 
 services:
   - docker
@@ -14,10 +15,14 @@ before_install:
   - docker-compose version
   - docker pull golang:1.12
   - docker pull php:7.2-fpm
+  - docker run -it --rm -v "$PWD":/usr/src/dr -w /usr/src/dr golang:1.12 go build -v
+  - sudo ln -s $PWD/docker-relay /usr/local/bin/go
+  - sudo ln -s $PWD/docker-relay /usr/local/bin/php
+  - cp test/travis.docker-relay.yml $HOME/.docker-relay.yml
 
 script:
-  - docker run -it --rm -v "$PWD":/usr/src/dr -w /usr/src/dr golang:1.12 go version
+  - go version
   - cd test 
   - docker-compose up -d
-  - docker-compose exec php ./check
-  - docker exec -e TEST_FAIL=exception $(docker-compose ps -q php) ./check; if [ $? -ne 255 ]; then false; fi
+  - ./check
+  - PHP_EXIT=exception ./check; if [ $? -ne 255 ]; then false; fi
