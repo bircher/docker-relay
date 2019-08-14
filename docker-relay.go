@@ -21,9 +21,9 @@ func main() {
 	}
 
 	// Find the docker binary.
-	binary, err := exec.LookPath("docker")
+	binary, err := exec.LookPath(args[0])
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "The docker binary was not found.")
+		fmt.Fprintln(os.Stderr, "The "+args[0]+" binary was not found.")
 		os.Exit(1)
 	}
 
@@ -63,6 +63,12 @@ func dockerArgs(arg0 string, tty bool, containerFinder func(string) (string, boo
 	// Evaluate environment variables in the config.
 	processEnvVar(conf)
 
+	if conf.Exec != nil {
+		args := append(conf.Exec, processedArgs(conf)...)
+		logDebug(args, conf)
+		return args, nil
+	}
+
 	// Get a slice of command arguments, if it is just a string it will use that.
 	cmd := conf.Cmd
 
@@ -77,13 +83,7 @@ func dockerArgs(arg0 string, tty bool, containerFinder func(string) (string, boo
 		args = append(args, "run")
 		container = conf.Image
 	} else {
-		// If Exec is set to false in the config we can also run the docker-compose container.
-		if conf.Exec {
-			args = append(args, "exec")
-		} else {
-			args = append(args, "run")
-		}
-
+		args = append(args, "exec")
 	}
 
 	// Always run as interactive.

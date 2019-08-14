@@ -14,7 +14,7 @@ type config struct {
 	Image string
 	Cmd   []string
 	Path  string
-	Exec  bool
+	Exec  []string
 
 	// docker exec config
 	User    string   `option:"user"`
@@ -124,7 +124,7 @@ func (c *config) replaceStrings(r *regexp.Regexp, trans func(string, string) str
 
 // getConf returns the configuration for the program
 func getConf(cfg *viper.Viper, run bool) (*config, error) {
-	c := &config{Exec: true}
+	var c *config
 
 	if err := cfg.Unmarshal(&c); err != nil {
 		return nil, err
