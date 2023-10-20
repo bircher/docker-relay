@@ -8,9 +8,9 @@ import (
 	"strings"
 
 	"github.com/joho/godotenv"
-	"github.com/mitchellh/go-homedir"
+	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
-	"golang.org/x/crypto/ssh/terminal"
+	"golang.org/x/term"
 )
 
 func init() {
@@ -66,7 +66,7 @@ func containerID(name string) (string, bool) {
 		return "", true
 	}
 
-	out, err := exec.Command("docker-compose", "ps", "-q", name).Output()
+	out, err := exec.Command("docker", "compose", "ps", "-q", name).Output()
 	if err != nil {
 		// If docker-compose complains about not finding the container, it is ok and we want to run the image.
 		return "", true
@@ -79,7 +79,7 @@ func containerID(name string) (string, bool) {
 
 // isTTY returns true if the current program runs as a tty.
 func isTTY() bool {
-	return terminal.IsTerminal(int(os.Stdin.Fd()))
+	return term.IsTerminal(int(os.Stdin.Fd()))
 }
 
 // processEnvVar escapes $(pwd) and environment variables

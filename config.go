@@ -23,11 +23,13 @@ type config struct {
 	Detach  bool     `option:"detach"`
 
 	// docker run config, also uses exec config
-	Name   string   `option:"name"`
-	Link   []string `option:"link"`
-	Volume []string `option:"volume"`
-	Rm     bool     `option:"rm"`
-	Device []string `option:"device"`
+	Name    string   `option:"name"`
+	Link    []string `option:"link"`
+	Volume  []string `option:"volume"`
+	Rm      bool     `option:"rm"`
+	Device  []string `option:"device"`
+	Expose  []string `option:"expose"`
+	Publish []string `option:"publish"`
 }
 
 // options returns the options to pass to docker
