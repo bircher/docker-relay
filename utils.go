@@ -50,7 +50,7 @@ func init() {
 	}
 }
 
-// viperSub returns the viper config for a key, and makes sure it it not nil.
+// viperSub returns the viper config for a key, and makes sure it is not nil.
 func viperSub(name string) (*viper.Viper, error) {
 	v := viper.Sub(name)
 	if v == nil {
@@ -66,7 +66,11 @@ func containerID(name string) (string, bool) {
 		return "", true
 	}
 
-	out, err := exec.Command("docker", "compose", "ps", "-q", name).Output()
+	args := []string{"compose"}
+	args = append(args, getDockerComposeFileArgument(name)...)
+	args = append(args, "ps", "-q", name)
+
+	out, err := exec.Command("docker", args...).Output()
 	if err != nil {
 		// If docker-compose complains about not finding the container, it is ok and we want to run the image.
 		return "", true
@@ -148,4 +152,23 @@ func logDebug(cmd []string, cfg *config) {
 
 		}
 	}
+}
+
+func getDockerComposeFileArgument(name string) []string {
+	list := []string{}
+
+	if viper.IsSet(name + ".docker-compse-files") {
+		for _, el := range viper.GetStringSlice(name + ".docker-compse-files") {
+			list = append(list, "--file", el)
+		}
+		return list
+	}
+
+	if viper.IsSet("docker-relay.docker-compse-files") {
+		for _, el := range viper.GetStringSlice("docker-relay.docker-compse-files") {
+			list = append(list, "--file", el)
+		}
+	}
+
+	return list
 }
