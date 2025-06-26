@@ -157,15 +157,15 @@ func logDebug(cmd []string, cfg *config) {
 func getDockerComposeFileArgument(name string) []string {
 	list := []string{}
 
-	if viper.IsSet(name + ".docker-compse-files") {
-		for _, el := range viper.GetStringSlice(name + ".docker-compse-files") {
+	if viper.IsSet(name + ".docker-compose-files") {
+		for _, el := range viper.GetStringSlice(name + ".docker-compose-files") {
 			list = append(list, "--file", el)
 		}
 		return list
 	}
 
-	if viper.IsSet("docker-relay.docker-compse-files") {
-		for _, el := range viper.GetStringSlice("docker-relay.docker-compse-files") {
+	if viper.IsSet("docker-relay.docker-compose-files") {
+		for _, el := range viper.GetStringSlice("docker-relay.docker-compose-files") {
 			list = append(list, "--file", el)
 		}
 	}
